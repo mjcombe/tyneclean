@@ -2,6 +2,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+(function () {
+
+  const PASSWORD = "tyneclean"; // change password here
+  const SESSION_KEY = "preview_access";
+
+  // already unlocked during this browser session
+  if (sessionStorage.getItem(SESSION_KEY) === "granted") {
+    return;
+  }
+
+  const entered = prompt("This page is password protected.\n\nEnter password:");
+
+  if (entered === PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, "granted");
+  } else {
+
+    document.open();
+    document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Access Restricted</title>
+        <style>
+          body {
+            margin:0;
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#0f172a;
+            color:#fff;
+            font-family:Arial, sans-serif;
+            text-align:center;
+          }
+          .box {
+            background:#111827;
+            padding:40px;
+            border-radius:12px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="box">
+          <h1>Access denied</h1>
+          <p>This preview is password protected.</p>
+        </div>
+      </body>
+      </html>
+    `);
+    document.close();
+
+    throw new Error("Access denied");
+  }
+
+})();
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Window Cleaning Pricing Calculator</title>
