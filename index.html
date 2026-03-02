@@ -2,60 +2,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
+<script>
 (function () {
 
-  const PASSWORD = "tyneclean"; // change password here
-  const SESSION_KEY = "preview_access";
+  const PASSWORD = "tyneclean"; // change this
+  const KEY = "preview_access";
 
-  // already unlocked during this browser session
-  if (sessionStorage.getItem(SESSION_KEY) === "granted") {
+  // allow if already unlocked
+  if (sessionStorage.getItem(KEY) === "yes") return;
+
+  const entered = window.prompt("Enter password to access this page:");
+
+  if (entered === PASSWORD) {
+    sessionStorage.setItem(KEY, "yes");
     return;
   }
 
-  const entered = prompt("This page is password protected.\n\nEnter password:");
-
-  if (entered === PASSWORD) {
-    sessionStorage.setItem(SESSION_KEY, "granted");
-  } else {
-
-    document.open();
-    document.write(`
-      <!DOCTYPE html>
-      <html>
+  // stop page loading completely
+  document.write(`
+    <html>
       <head>
         <title>Access Restricted</title>
         <style>
-          body {
+          body{
             margin:0;
             height:100vh;
             display:flex;
             align-items:center;
             justify-content:center;
-            background:#0f172a;
+            background:#111;
             color:#fff;
-            font-family:Arial, sans-serif;
-            text-align:center;
-          }
-          .box {
-            background:#111827;
-            padding:40px;
-            border-radius:12px;
+            font-family:Arial,sans-serif;
           }
         </style>
       </head>
       <body>
-        <div class="box">
-          <h1>Access denied</h1>
-          <p>This preview is password protected.</p>
-        </div>
+        <h1>Access denied</h1>
       </body>
-      </html>
-    `);
-    document.close();
+    </html>
+  `);
 
-    throw new Error("Access denied");
-  }
+  document.close();
+  throw new Error("Blocked");
 
 })();
 </script>
